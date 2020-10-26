@@ -7,11 +7,11 @@ use rustyline::Editor;
 use std::fs::File;
 use lazy_static::lazy_static;
 use std::sync::{RwLock, Arc};
-use colored::Colorize;
+use colored::*;
 
 lazy_static! {
     pub static ref SHELLMENUCONTEXT: Arc<RwLock<&'static str>> = Arc::new(RwLock::new("main"));
-    pub static ref PROMPT: Arc<RwLock<String>> = Arc::new(RwLock::new("\x1b[32mDragos@Teamserver>> ".to_string()));
+    pub static ref PROMPT: Arc<RwLock<String>> = Arc::new(RwLock::new("Threat Hunting".to_string()));
 
 
 }

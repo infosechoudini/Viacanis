@@ -5,7 +5,7 @@ pub mod eventlog;
 
 pub mod user;
 pub use user::cli::*;
-pub use user::dragosagent::*;
+pub use user::agent::*;
 
 
 
@@ -38,17 +38,17 @@ async fn main() {
     // Gets a value for config if supplied by user, or defaults to "default.conf"
     let hunt_option = matches.value_of("hunt").unwrap().to_owned();
     let monitor_option = matches.value_of("monitor").unwrap().to_owned();
-    // Retrieve the IDs of all active CPU cores.
+
 
     if monitor_option != "None"{
-        let _detached_thread = thread::spawn( move || {
-            user::dragosagent::monitor_run();
+        let _detached_thread = tokio::spawn( async  {
+            user::agent::monitor_run().await;
         });
     }
 
     if hunt_option != "None"{
-        let _detached_thread = thread::spawn( move || {
-                user::dragosagent::monitor_run();
+        let _detached_thread = tokio::spawn( async {
+                user::agent::monitor_run().await;
             });
     }
 

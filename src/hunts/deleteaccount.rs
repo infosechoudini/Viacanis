@@ -1,5 +1,5 @@
-// T1136 - Create Account
-// Tactic::Persistence
+// T1531 - Account Access Removal
+// Tactic::Impact
 use crate::colors::*;
 use crate::eventlog::subscriber;
 
@@ -26,13 +26,13 @@ struct AccountCreation {
 }
 
 
-pub async fn hunt_create_accounts (){
-    println!{"CREATE ACCOUNTS"};
+pub async fn hunt_delete_accounts (){
+    println!{"DELETE ACCOUNTS"};
     let hunt_config = true;
     let ten_millis = Duration::from_millis(10);
 
-    let id = 4720 as u32;
-    let event_filter = EventFilter::event_data("EventRecordID", "4720");
+    let id = 4726 as u32;
+    let event_filter = EventFilter::event_data("EventRecordID", "4726");
 
     let event_conditions = Condition::filter(EventFilter::event(id));
 
@@ -86,7 +86,7 @@ pub async fn hunt_create_accounts (){
                             }
 
                         }
-                        println!("{}", "MITRE Technique: T1136 - New Account");
+                        println!("{}", "MITRE Technique: T1531 - Account Access Removal");
                         println!{"New User: {}, Domain: {}, Culprit: {}", account_creation.target_user, account_creation.target_domain, account_creation.subject_username };
                     }
                     sleep(Duration::from_millis(200));
