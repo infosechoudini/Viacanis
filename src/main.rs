@@ -18,7 +18,7 @@ async fn main() {
     let matches = App::new("dragosagent")
                           .version("1.0")
                           .author("Harry Thomas @infosechoudini")
-                          .about("Dragos Industrial Hunting Agent")
+                          .about("Industrial Hunting Agent")
                           .arg(Arg::with_name("hunt")
                                .short("h")
                                .long("hunt")

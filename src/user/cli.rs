@@ -18,9 +18,9 @@ lazy_static! {
 
 pub fn start_cli(){
     let mut rl = Editor::<()>::new();
-    if rl.load_history("./dragosagent_history.txt").is_err() {
+    if rl.load_history("./agent_history.txt").is_err() {
         println!("No previous history.");
-        File::create("./dragosagent_history.txt").expect("Couldn't create history file");
+        File::create("./agent_history.txt").expect("Couldn't create history file");
     }
 
     loop {
