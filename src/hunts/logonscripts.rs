@@ -8,10 +8,15 @@ use winreg::enums::*;
 use std::thread::sleep;
 use std::time::Duration;
 use std::str;
+use log::*;
+use smol::Timer;
+use async_std::task;
 
 
-pub async fn hunt_logon_scripts() {
-    println!("File extensions, registered in system:");
+
+pub async fn hunt_logon_scripts(){
+    info!("LOGON SCRIPT");
+    info!("File extensions, registered in system:");
 
     loop{
         let system = RegKey::predef(HKEY_CURRENT_USER).open_subkey("Environment").unwrap();
@@ -19,14 +24,16 @@ pub async fn hunt_logon_scripts() {
         for (name, value) in system.enum_values().map(|x| x.unwrap()) {
             match name.as_str() {
                 "UserInitMprLogonScript" => {
-                                        let reg_sz_value = str::from_utf8(&value.bytes).unwrap();
-                                            println!("{:?}", value.bytes);
-                                            if reg_sz_value != "\0\0" {
-                                            println!("{:?}", value)}
+                                        //let reg_sz_value = str::from_utf8(&value.bytes).unwrap();
+                                        if value.bytes != [0x00,0x00] {
+                                            info!("{:?}", hex::encode(value.bytes))}
                                         }
                 _ => continue,
             }
         }
-        sleep(Duration::from_millis(200));
+        let dur = Duration::from_millis(100000);
+        task::sleep(dur).await;
+
     }
+
 }

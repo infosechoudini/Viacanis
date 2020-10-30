@@ -1,9 +1,8 @@
 // T1531 - Account Access Removal
 // Tactic::Impact
-use crate::colors::*;
 use crate::eventlog::subscriber;
 
-use std::thread::sleep;
+use async_std::task;
 use std::time::Duration;
 use serde::{Serialize, Deserialize};
 use evtx::EvtxParser;
@@ -17,6 +16,14 @@ use xmlJSON::XmlDocument;
 use std::str::FromStr;
 use rustc_serialize::json::ToJson;
 use colored::*;
+use log::*;
+use smol::Timer;
+use futures::Future;
+use futures::task::Poll;
+use futures::task::Context;
+use std::pin::Pin;
+use futures::future;
+
 
 #[derive(Deserialize, Default, Debug)]
 struct AccountCreation {
@@ -25,23 +32,15 @@ struct AccountCreation {
     subject_username: String,
 }
 
-
-pub async fn hunt_delete_accounts (){
-    println!{"DELETE ACCOUNTS"};
-    let hunt_config = true;
-    let ten_millis = Duration::from_millis(10);
+pub async fn hunt_delete_accounts(){
+    info!{"DELETE ACCOUNTS"};
 
     let id = 4726 as u32;
     let event_filter = EventFilter::event_data("EventRecordID", "4726");
 
     let event_conditions = Condition::filter(EventFilter::event(id));
 
-    println!("\nMonitoring Event Condition: {}", event_conditions);
-
-    let conditions = vec![
-        Condition::filter(EventFilter::level(4, Comparison::GreaterThanOrEqual)),
-        Condition::filter(EventFilter::level(0, Comparison::GreaterThanOrEqual)),
-    ];
+    info!("\nMonitoring Event Condition: {}", event_conditions);
     let query = QueryList::new()
         .with_query(
             Query::new()
@@ -54,19 +53,16 @@ pub async fn hunt_delete_accounts (){
         )
         .build();
 
-    while hunt_config {
+    loop  {
         let query = query.clone();
         match subscriber::WinEventsSubscriber::get(query) {
             Ok(mut events) => {
-                println!("\nCtrl+C to quit!");
-                while let Some(_event) = events.next() {
-                    // catch up to present
-                }
-                println!("Waiting for new events...");
+                info!("\nCtrl+C to quit!");
+                info!("Waiting for new events...");
                 loop {
                     while let Some(event) = events.next() {
                         let string_event = event.to_string();
-                        let mut res = string_event.trim_matches(char::from(0));
+                        let res = string_event.trim_matches(char::from(0));
                         let data = XmlDocument::from_str(&res).unwrap();
                         let mut account_creation = AccountCreation::default();
                         for data_key in data.data.iter(){
@@ -84,15 +80,17 @@ pub async fn hunt_delete_accounts (){
                                     }
                                 }
                             }
-
                         }
-                        println!("{}", "MITRE Technique: T1531 - Account Access Removal");
-                        println!{"New User: {}, Domain: {}, Culprit: {}", account_creation.target_user, account_creation.target_domain, account_creation.subject_username };
+                        info!("{}", "MITRE Technique: T1531 - Account Access Removal");
+                        info!{"New User: {}, Domain: {}, Culprit: {}", account_creation.target_user, account_creation.target_domain, account_creation.subject_username };
                     }
-                    sleep(Duration::from_millis(200));
+                    let dur = Duration::from_millis(200);
+                    task::sleep(dur).await;
                 }
             }
-            Err(e) => println!("Error: {}", e),
+            Err(e) => {
+                error!("Error: {}", e);
+            },
         }
     }
 }

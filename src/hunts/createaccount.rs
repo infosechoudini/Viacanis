@@ -1,9 +1,8 @@
 // T1136 - Create Account
 // Tactic::Persistence
-use crate::colors::*;
 use crate::eventlog::subscriber;
 
-use std::thread::sleep;
+use async_std::task;
 use std::time::Duration;
 use serde::{Serialize, Deserialize};
 use evtx::EvtxParser;
@@ -17,6 +16,14 @@ use xmlJSON::XmlDocument;
 use std::str::FromStr;
 use rustc_serialize::json::ToJson;
 use colored::*;
+use log::*;
+use std::io;
+use smol::Timer;
+use futures::Future;
+use futures::task::Poll;
+use futures::task::Context;
+use std::pin::Pin;
+use futures::future;
 
 #[derive(Deserialize, Default, Debug)]
 struct AccountCreation {
@@ -26,8 +33,8 @@ struct AccountCreation {
 }
 
 
-pub async fn hunt_create_accounts (){
-    println!{"CREATE ACCOUNTS"};
+pub async fn hunt_create_accounts(){
+    info!{"CREATE ACCOUNTS"};
     let hunt_config = true;
     let ten_millis = Duration::from_millis(10);
 
@@ -36,7 +43,7 @@ pub async fn hunt_create_accounts (){
 
     let event_conditions = Condition::filter(EventFilter::event(id));
 
-    println!("\nMonitoring Event Condition: {}", event_conditions);
+    info!("\nMonitoring Event Condition: {}", event_conditions);
 
     let conditions = vec![
         Condition::filter(EventFilter::level(4, Comparison::GreaterThanOrEqual)),
@@ -54,15 +61,12 @@ pub async fn hunt_create_accounts (){
         )
         .build();
 
-    while hunt_config {
+    loop  {
         let query = query.clone();
         match subscriber::WinEventsSubscriber::get(query) {
             Ok(mut events) => {
-                println!("\nCtrl+C to quit!");
-                while let Some(_event) = events.next() {
-                    // catch up to present
-                }
-                println!("Waiting for new events...");
+                info!("\nCtrl+C to quit!");
+                info!("Waiting for new events...");
                 loop {
                     while let Some(event) = events.next() {
                         let string_event = event.to_string();
@@ -86,14 +90,19 @@ pub async fn hunt_create_accounts (){
                             }
 
                         }
-                        println!("{}", "MITRE Technique: T1136 - New Account");
-                        println!{"New User: {}, Domain: {}, Culprit: {}", account_creation.target_user, account_creation.target_domain, account_creation.subject_username };
+                        info!("{}", "MITRE Technique: T1136 - New Account");
+                        info!{"New User: {}, Domain: {}, Culprit: {}", account_creation.target_user, account_creation.target_domain, account_creation.subject_username };
                     }
-                    sleep(Duration::from_millis(200));
+
+                    let dur = Duration::from_millis(200);
+                    task::sleep(dur).await;
                 }
             }
-            Err(e) => println!("Error: {}", e),
+            Err(e) => {
+                error!("Error: {}", e);
+            },
         }
     }
+
 }
 

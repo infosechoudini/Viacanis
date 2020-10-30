@@ -1,3 +1,4 @@
+#![feature(async_await)]
 
 pub mod colors;
 pub mod hunts;
@@ -11,7 +12,11 @@ pub use user::agent::*;
 
 use clap::{Arg, App};
 use std::thread;
-use tokio;
+use futures::prelude::*;
+use tokio::prelude::*;
+use log::*;
+use tokio::task;
+
 
 #[tokio::main]
 async fn main() {
@@ -38,18 +43,15 @@ async fn main() {
     // Gets a value for config if supplied by user, or defaults to "default.conf"
     let hunt_option = matches.value_of("hunt").unwrap().to_owned();
     let monitor_option = matches.value_of("monitor").unwrap().to_owned();
+    env_logger::init();
 
 
     if monitor_option != "None"{
-        let _detached_thread = tokio::spawn( async  {
             user::agent::monitor_run().await;
-        });
     }
 
     if hunt_option != "None"{
-        let _detached_thread = tokio::spawn( async {
-                user::agent::monitor_run().await;
-            });
+            user::agent::monitor_run().await;  
     }
 
     user::cli::start_cli();

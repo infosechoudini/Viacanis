@@ -26,6 +26,11 @@ pub struct WinEventsSubscriber {
     has_events: bool,
 }
 
+unsafe impl Send for WinEventsSubscriber{}
+unsafe impl Sync for WinEventsSubscriber{}
+
+
+
 impl WinEventsSubscriber {
     pub fn get<T: Into<String> + Clone>(query: T) -> Result<WinEventsSubscriber, String> {
         let ffi_query = {
