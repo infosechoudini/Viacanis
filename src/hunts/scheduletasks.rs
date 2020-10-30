@@ -1,5 +1,5 @@
-// T1136 - Create Account
-// Tactic::Persistence
+// T1053 - Scheduled Tasks
+// Tactic::Persistence / Tactic::Execution / Tactic::PrivilegeEscalation
 use crate::eventlog::subscriber;
 
 use async_std::task;
@@ -26,17 +26,18 @@ use std::pin::Pin;
 use futures::future;
 
 #[derive(Deserialize, Default, Debug)]
-struct AccountCreation {
-    target_user: String,
-    target_domain: String,
+struct ScheduledTask {
+    taskname: String,
+    taskcontent: String,
     subject_username: String,
 }
 
 
-pub async fn monitor_create_accounts(){
-    info!{"CREATE ACCOUNTS"};
+pub async fn monitor_scheduled_tasks(){
+    info!{"SCHEDULE TASKS"};
+    let ten_millis = Duration::from_millis(10);
 
-    let id = 4720 as u32;
+    let id = 4698 as u32;
     let event_conditions = Condition::filter(EventFilter::event(id));
 
     info!("\nMonitoring Event Condition: {}", event_conditions);
@@ -64,16 +65,16 @@ pub async fn monitor_create_accounts(){
                         let string_event = event.to_string();
                         let res = string_event.trim_matches(char::from(0));
                         let data = XmlDocument::from_str(&res).unwrap();
-                        let mut account_creation = AccountCreation::default();
+                        let mut sched_task = ScheduledTask::default();
                         for data_key in data.data.iter(){
                             for xmldata in &data_key.sub_elements{
                                 if xmldata.name == "EventData"{
                                     for subelement in &xmldata.sub_elements{
                                         for (att_key, att_value) in &subelement.attributes{
                                             match att_value.as_str(){
-                                                "TargetUserName" => {account_creation.target_user = subelement.data.as_ref().unwrap().to_string()}
-                                                "TargetDomainName" => {account_creation.target_domain = subelement.data.as_ref().unwrap().to_string()}
-                                                "SubjectUserName" => {account_creation.subject_username = subelement.data.as_ref().unwrap().to_string()}
+                                                "TaskName" => {sched_task.taskname = subelement.data.as_ref().unwrap().to_string()}
+                                                "TaskContent" => {sched_task.taskcontent = subelement.data.as_ref().unwrap().to_string()}
+                                                "SubjectUserName" => {sched_task.subject_username = subelement.data.as_ref().unwrap().to_string()}
                                                  _ => continue,
                                             }
                                         }
@@ -82,8 +83,8 @@ pub async fn monitor_create_accounts(){
                             }
 
                         }
-                        info!("{}", "MITRE Technique: T1136 - New Account");
-                        info!{"New User: {}, Domain: {}, Culprit: {}", account_creation.target_user, account_creation.target_domain, account_creation.subject_username };
+                        info!("{}", "MITRE Technique: T1053 - Scheduled Tasks");
+                        info!{"Task Name: {}, TaskContent: {}, Username: {}", sched_task.taskname, sched_task.taskcontent, sched_task.subject_username };
                     }
 
                     let dur = Duration::from_millis(200);
@@ -98,12 +99,14 @@ pub async fn monitor_create_accounts(){
 
 }
 
-pub async fn hunt_create_accounts(){
+pub async fn hunt_scheduled_tasks(){
 
-    let id = 4720 as u32;
+    info!{"SCHEDULE TASKS"};
+
+    let id = 4698 as u32;
     let event_conditions = Condition::filter(EventFilter::event(id));
 
-    info!("\nHunting Event Condition: {}", event_conditions);
+    info!("\nMonitoring Event Condition: {}", event_conditions);
 
     let query = QueryList::new()
         .with_query(
@@ -123,16 +126,16 @@ pub async fn hunt_create_accounts(){
                 let string_event = event.to_string();
                 let res = string_event.trim_matches(char::from(0));
                 let data = XmlDocument::from_str(&res).unwrap();
-                let mut account_creation = AccountCreation::default();
+                let mut sched_task = ScheduledTask::default();
                 for data_key in data.data.iter(){
                     for xmldata in &data_key.sub_elements{
                         if xmldata.name == "EventData"{
                             for subelement in &xmldata.sub_elements{
                                 for (att_key, att_value) in &subelement.attributes{
                                     match att_value.as_str(){
-                                        "TargetUserName" => {account_creation.target_user = subelement.data.as_ref().unwrap().to_string()}
-                                        "TargetDomainName" => {account_creation.target_domain = subelement.data.as_ref().unwrap().to_string()}
-                                        "SubjectUserName" => {account_creation.subject_username = subelement.data.as_ref().unwrap().to_string()}
+                                        "TaskName" => {sched_task.taskname = subelement.data.as_ref().unwrap().to_string()}
+                                        "TaskContent" => {sched_task.taskcontent = subelement.data.as_ref().unwrap().to_string()}
+                                        "SubjectUserName" => {sched_task.subject_username = subelement.data.as_ref().unwrap().to_string()}
                                          _ => continue,
                                     }
                                 }
@@ -141,9 +144,9 @@ pub async fn hunt_create_accounts(){
                     }
 
                 }
-                info!("{}", "MITRE Technique: T1136 - New Account");
-                info!{"New User: {}, Domain: {}, Culprit: {}", account_creation.target_user, account_creation.target_domain, account_creation.subject_username };
-            }          
+                info!("{}", "MITRE Technique: T1053 - Scheduled Tasks");
+                info!{"Task Name: {}, TaskContent: {}, Username: {}", sched_task.taskname, sched_task.taskcontent, sched_task.subject_username };
+            }         
         }
         Err(e) => info!("Error: {}", e),
     }

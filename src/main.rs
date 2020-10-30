@@ -47,13 +47,12 @@ async fn main() {
 
 
     if monitor_option != "None"{
-            user::agent::monitor_run().await;
+        user::agent::monitor_run().await;
+        user::cli::start_cli();
     }
 
     if hunt_option != "None"{
-            user::agent::monitor_run().await;  
+        user::agent::hunt_run().await; 
+        user::cli::start_cli(); 
     }
-
-    user::cli::start_cli();
-
 }
