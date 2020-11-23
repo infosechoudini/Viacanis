@@ -1,15 +1,10 @@
 //T1037 - Boot or Logon Initialization Scripts
 //Tactic::Persistence | Tactic::PrivilegeEscalation
  
-
-use std::io;
 use winreg::RegKey;
 use winreg::enums::*;
-use std::thread::sleep;
 use std::time::Duration;
-use std::str;
 use log::*;
-use smol::Timer;
 use async_std::task;
 
 

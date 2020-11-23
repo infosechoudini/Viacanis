@@ -5,27 +5,14 @@ use crate::eventlog::subscriber;
 use async_std::task;
 use std::time::Duration;
 use serde::{Serialize, Deserialize};
-use evtx::EvtxParser;
-use xml_to_json;
-use std::fs::File;
 use win_event_log::prelude::*;
-use std::io::prelude::*;
-use std::sync::Arc;
-use ben;
 use xmlJSON::XmlDocument;
 use std::str::FromStr;
-use rustc_serialize::json::ToJson;
-use colored::*;
 use log::*;
-use smol::Timer;
-use futures::Future;
-use futures::task::Poll;
-use futures::task::Context;
-use std::pin::Pin;
-use futures::future;
 
 
-#[derive(Deserialize, Default, Debug)]
+
+#[derive(Serialize, Deserialize, Default, Debug)]
 struct AccountCreation {
     target_user: String,
     target_domain: String,
@@ -68,7 +55,7 @@ pub async fn monitor_delete_accounts(){
                             for xmldata in &data_key.sub_elements{
                                 if xmldata.name == "EventData"{
                                     for subelement in &xmldata.sub_elements{
-                                        for (att_key, att_value) in &subelement.attributes{
+                                        for (_att_key, att_value) in &subelement.attributes{
                                             match att_value.as_str(){
                                                 "TargetUserName" => {account_creation.target_user = subelement.data.as_ref().unwrap().to_string()}
                                                 "TargetDomainName" => {account_creation.target_domain = subelement.data.as_ref().unwrap().to_string()}
@@ -124,7 +111,7 @@ pub async fn hunt_delete_accounts(){
                     for xmldata in &data_key.sub_elements{
                         if xmldata.name == "EventData"{
                             for subelement in &xmldata.sub_elements{
-                                for (att_key, att_value) in &subelement.attributes{
+                                for (_att_key, att_value) in &subelement.attributes{
                                     match att_value.as_str(){
                                         "TargetUserName" => {account_creation.target_user = subelement.data.as_ref().unwrap().to_string()}
                                         "TargetDomainName" => {account_creation.target_domain = subelement.data.as_ref().unwrap().to_string()}

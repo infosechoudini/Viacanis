@@ -1,5 +1,5 @@
-// T1136 - Create Account
-// Tactic::Persistence
+// T1543 - Create or Modify System Process
+// Tactic::Persistence | Tactic::PrivilegeEscalation
 use crate::eventlog::subscriber;
 
 use async_std::task;

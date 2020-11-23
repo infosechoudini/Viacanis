@@ -1,13 +1,13 @@
 use crate::colors::*;
 
 
-use prettytable::{Table, Row, Cell};
+//use prettytable::{Table, Row, Cell};
 use shellwords::split;
 use rustyline::Editor;
 use std::fs::File;
 use lazy_static::lazy_static;
 use std::sync::{RwLock, Arc};
-use colored::*;
+//use colored::*;
 
 lazy_static! {
     pub static ref SHELLMENUCONTEXT: Arc<RwLock<&'static str>> = Arc::new(RwLock::new("main"));

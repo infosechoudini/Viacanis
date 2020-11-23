@@ -5,27 +5,13 @@ use crate::eventlog::subscriber;
 use async_std::task;
 use std::time::Duration;
 use serde::{Serialize, Deserialize};
-use evtx::EvtxParser;
-use xml_to_json;
-use std::fs::File;
 use win_event_log::prelude::*;
-use std::io::prelude::*;
-use std::sync::Arc;
-use ben;
 use xmlJSON::XmlDocument;
 use std::str::FromStr;
-use rustc_serialize::json::ToJson;
-use colored::*;
 use log::*;
-use std::io;
-use smol::Timer;
-use futures::Future;
-use futures::task::Poll;
-use futures::task::Context;
-use std::pin::Pin;
-use futures::future;
 
-#[derive(Deserialize, Default, Debug)]
+
+#[derive(Serialize, Deserialize, Default, Debug)]
 struct ScheduledTask {
     taskname: String,
     taskcontent: String,
@@ -35,8 +21,6 @@ struct ScheduledTask {
 
 pub async fn monitor_scheduled_tasks(){
     info!{"SCHEDULE TASKS"};
-    let ten_millis = Duration::from_millis(10);
-
     let id = 4698 as u32;
     let event_conditions = Condition::filter(EventFilter::event(id));
 
@@ -70,7 +54,7 @@ pub async fn monitor_scheduled_tasks(){
                             for xmldata in &data_key.sub_elements{
                                 if xmldata.name == "EventData"{
                                     for subelement in &xmldata.sub_elements{
-                                        for (att_key, att_value) in &subelement.attributes{
+                                        for (_att_key, att_value) in &subelement.attributes{
                                             match att_value.as_str(){
                                                 "TaskName" => {sched_task.taskname = subelement.data.as_ref().unwrap().to_string()}
                                                 "TaskContent" => {sched_task.taskcontent = subelement.data.as_ref().unwrap().to_string()}
@@ -131,7 +115,7 @@ pub async fn hunt_scheduled_tasks(){
                     for xmldata in &data_key.sub_elements{
                         if xmldata.name == "EventData"{
                             for subelement in &xmldata.sub_elements{
-                                for (att_key, att_value) in &subelement.attributes{
+                                for (_att_key, att_value) in &subelement.attributes{
                                     match att_value.as_str(){
                                         "TaskName" => {sched_task.taskname = subelement.data.as_ref().unwrap().to_string()}
                                         "TaskContent" => {sched_task.taskcontent = subelement.data.as_ref().unwrap().to_string()}

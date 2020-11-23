@@ -1,5 +1,3 @@
-#![feature(async_await)]
-
 pub mod colors;
 pub mod hunts;
 pub mod eventlog;
@@ -8,15 +6,8 @@ pub mod user;
 pub use user::cli::*;
 pub use user::agent::*;
 
-
-
 use clap::{Arg, App};
-use std::thread;
-use futures::prelude::*;
-use tokio::prelude::*;
 use log::*;
-use tokio::task;
-
 
 #[tokio::main]
 async fn main() {
@@ -52,6 +43,7 @@ async fn main() {
     }
 
     if hunt_option != "None"{
+        info!("STARTING HUNT MODE");
         user::agent::hunt_run().await; 
         user::cli::start_cli(); 
     }
