@@ -7,6 +7,7 @@ To open source blue team tools and gather input from the community.
 # To Do 
 - Make this readme better
   - Add install and running commands
+  - ASCII Art
   - I guess code more for this project...
   
  
