@@ -1,1 +1,15 @@
+# General
+.vs/
+build/
+vcpkg/
+*.user
+*.filters
+*.cache
+*.bak
+*.lib
+*.aps
+*.DS_Store
+
+
+#RUST Build Directory
 /target
