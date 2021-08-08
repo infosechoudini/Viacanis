@@ -11,7 +11,7 @@ use log::*;
 
 #[tokio::main]
 async fn main() {
-    let matches = App::new("dragosagent")
+    let matches = App::new("viacanisagent")
                           .version("0.0.1")
                           .author("Harry Thomas @infosechoudini")
                           .about("Industrial Hunting Agent")
