@@ -6,13 +6,16 @@ sudo: true
 cache:
   - apt
   - cargo
-  - cmake
-  - homebrew
 
 matrix:
   include:
-    - os: osx
-
+    - os: linux
+      addons:
+        apt:
+          update: true
+          packages:
+            - cmake
+            - mingw-w64
 #    
 #addons:
 #  apt:
@@ -24,7 +27,6 @@ matrix:
 script:
   - rustup update
   - rustup target add x86_64-pc-windows-gnu
-  - brew install mingw-w64
   - cd agent
   - cargo build --target x86_64-pc-windows-gnu
   - cd ../controlcenter
