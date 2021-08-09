@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/infosechoudini/Viacanis.svg?branch=master)](https://travis-ci.org/infosechoudini/Viacanis)
+[![Build Status](https://app.travis-ci.com/infosechoudini/Viacanis.svg?branch=master)](https://app.travis-ci.com/infosechoudini/Viacanis.svg?branch=master)
 
 # Viacanis
 Blue Team Threat Hunting and Monitoring Tool
