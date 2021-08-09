@@ -10,7 +10,10 @@ cache:
 
 matrix:
   include:
-    - os: os: osx
+    - os: linux
+
+    dist: xenial
+
 addons:
   apt:
     sources:
