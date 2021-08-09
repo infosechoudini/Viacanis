@@ -6,16 +6,15 @@ sudo: true
 cache:
   - apt
   - cargo
-
-matrix:
-  include:
-    - os: linux
-      addons:
-        apt:
-          update: true
-          packages:
-            - cmake
-            - mingw-w64
+dist: bionic
+addons:
+  apt:
+    addons:
+      apt:
+        update: true
+        packages:
+          - cmake
+          - mingw-w64
 #    
 #addons:
 #  apt:
