@@ -11,7 +11,6 @@ jobs:
   include:
       - os: windows
       - os: linux
-        dist: Focal
       - if: os = windows      
         script: 
           - cd agent
@@ -20,5 +19,5 @@ jobs:
           - cargo build
       - if: os = linux
         script:
-          - cd ../controlcenter
+          - cd ./controlcenter
           - cargo build
