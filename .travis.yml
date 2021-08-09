@@ -14,11 +14,13 @@ jobs:
   include:
     - if: os = windows      
       script: 
+        - rustup update
         - cd agent
         - cargo build
         - cd ../controlcenter
         - cargo build
     - if: os = linux
       script:
+        - rustup update
         - cd ./controlcenter
         - cargo build
