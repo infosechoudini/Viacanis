@@ -25,9 +25,7 @@ jobs:
 #      - cmake
 
 script:
-  - rustup update
-  - rustup target add x86_64-pc-windows-gnu
   - cd agent
-  - cargo build --target x86_64-pc-windows-gnu
+  - cargo build 
   - cd ../controlcenter
   - cargo build
