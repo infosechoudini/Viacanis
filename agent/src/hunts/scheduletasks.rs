@@ -1,14 +1,22 @@
 // T1053 - Scheduled Tasks
 // Tactic::Persistence / Tactic::Execution / Tactic::PrivilegeEscalation
-use crate::eventlog::subscriber;
 
+//LOCAL IMPORTS
+use crate::eventlog::subscriber;
+use crate::eventlog::api;
+use crate::messages::messages::*;
+use crate::user::comms;
+
+//DEPENDENCIES
 use async_std::task;
 use std::time::Duration;
 use serde::{Serialize, Deserialize};
-use win_event_log::prelude::*;
+use win_event_log::prelude::{QueryItem, QueryList, Query, Condition, EventFilter};
 use xmlJSON::XmlDocument;
 use std::str::FromStr;
 use log::*;
+use tokio::*;
+
 
 
 #[derive(Serialize, Deserialize, Default, Debug)]
@@ -20,11 +28,9 @@ struct ScheduledTask {
 
 
 pub async fn monitor_scheduled_tasks(){
-    info!{"SCHEDULE TASKS"};
+    info!{"ATTACHED FUTURE: SCHEDULE TASKS"};
     let id = 4698 as u32;
     let event_conditions = Condition::filter(EventFilter::event(id));
-
-    info!("\nMonitoring Event Condition: {}", event_conditions);
 
     let query = QueryList::new()
         .with_query(
@@ -69,6 +75,18 @@ pub async fn monitor_scheduled_tasks(){
                         }
                         info!("{}", "MITRE Technique: T1053 - Scheduled Tasks");
                         info!{"Task Name: {}, TaskContent: {}, Username: {}", sched_task.taskname, sched_task.taskcontent, sched_task.subject_username };
+                        
+                        let mut base_msg = BaseMessage::default();
+                        let mut alert_msg = Alert::default();
+                        alert_msg.engine = "Hunts".to_string();
+                        alert_msg.title = "MITRE Technique: T1053 - Scheduled Tasks".to_string();
+                        alert_msg.description = "Scheduled Tasks".to_string();
+                        alert_msg.details =  format!{"Task Name: {}, TaskContent: {}, Username: {}", sched_task.taskname, sched_task.taskcontent, sched_task.subject_username}.to_string();
+
+                        base_msg.payload_type = "Alert".to_string();
+                        base_msg.alert = alert_msg;
+
+                        comms::send_alert(base_msg.clone()).await;
                     }
 
                     let dur = Duration::from_millis(200);
@@ -85,13 +103,10 @@ pub async fn monitor_scheduled_tasks(){
 
 pub async fn hunt_scheduled_tasks(){
 
-    info!{"SCHEDULE TASKS"};
+    info!{"ATTACHED FUTURE: SCHEDULE TASKS"};
 
     let id = 4698 as u32;
     let event_conditions = Condition::filter(EventFilter::event(id));
-
-    info!("\nMonitoring Event Condition: {}", event_conditions);
-
     let query = QueryList::new()
         .with_query(
             Query::new()
@@ -104,7 +119,7 @@ pub async fn hunt_scheduled_tasks(){
         )
         .build();
 
-    match WinEvents::get(query) {
+    match api::WinEvents::get(query) {
         Ok(events) => {
             if let Some(event) = events.into_iter().next() {
                 let string_event = event.to_string();
@@ -130,6 +145,18 @@ pub async fn hunt_scheduled_tasks(){
                 }
                 info!("{}", "MITRE Technique: T1053 - Scheduled Tasks");
                 info!{"Task Name: {}, TaskContent: {}, Username: {}", sched_task.taskname, sched_task.taskcontent, sched_task.subject_username };
+            
+                let mut base_msg = BaseMessage::default();
+                let mut alert_msg = Alert::default();
+                alert_msg.engine = "Hunts".to_string();
+                alert_msg.title = "MITRE Technique: T1053 - Scheduled Tasks".to_string();
+                alert_msg.description = "Scheduled Tasks".to_string();
+                alert_msg.details =  format!{"Task Name: {}, TaskContent: {}, Username: {}", sched_task.taskname, sched_task.taskcontent, sched_task.subject_username}.to_string();
+
+                base_msg.payload_type = "Alert".to_string();
+                base_msg.alert = alert_msg;
+
+                comms::send_alert(base_msg.clone()).await;
             }         
         }
         Err(e) => info!("Error: {}", e),

@@ -20,12 +20,11 @@ struct AccountCreation {
 
 
 pub async fn monitor_create_accounts(){
-    info!{"CREATE ACCOUNTS"};
+    info!{"ATTACHED FUTURE: CREATE ACCOUNTS"};
 
     let id = 4720 as u32;
     let event_conditions = Condition::filter(EventFilter::event(id));
 
-    info!("\nMonitoring Event Condition: {}", event_conditions);
 
     let query = QueryList::new()
         .with_query(

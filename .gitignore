@@ -1,5 +1,6 @@
 # General
 .vs/
+.vscode/
 build/
 vcpkg/
 *.user
@@ -13,3 +14,4 @@ vcpkg/
 
 #RUST Build Directory
 /target
+*target

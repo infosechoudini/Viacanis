@@ -10,8 +10,7 @@ use async_std::task;
 
 
 pub async fn monitor_logon_scripts(){
-    info!("LOGON SCRIPT");
-    info!("File extensions, registered in system:");
+    info!("ATTACHED FUTURE: LOGON SCRIPT");
 
     loop{
         let system = RegKey::predef(HKEY_CURRENT_USER).open_subkey("Environment").unwrap();
