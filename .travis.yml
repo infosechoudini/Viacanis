@@ -10,8 +10,7 @@ cache:
 
 matrix:
   include:
-    - os: linux
-      env: TARGET=i686-unknown-linux-gnu
+    - os: os: osx
 addons:
   apt:
     sources:
