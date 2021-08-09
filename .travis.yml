@@ -6,10 +6,14 @@ rust:
 cache:
   - cargo
 
+os:
+  - windows
+  -linux
+
 jobs:
   include:
     - stage: windows
-    - os: = windows      
+    - os: windows      
       script: 
         - rustup update
         - cd agent
@@ -17,7 +21,7 @@ jobs:
         - cd ../controlcenter
         - cargo build
     - stage: linux
-      - os: = linux
+      - os: linux
       script:
         - rustup update
         - cd ./controlcenter
