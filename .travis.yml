@@ -9,8 +9,6 @@ cache:
 
 jobs:
   include:
-      - os: windows
-      - os: linux
       - if: os = windows      
         script: 
           - cd agent
