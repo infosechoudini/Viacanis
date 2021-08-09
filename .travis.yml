@@ -6,15 +6,16 @@ sudo: true
 cache:
   - apt
   - cargo
-dist: bionic
-addons:
-  apt:
-    addons:
-      apt:
-        update: true
-        packages:
-          - cmake
-          - mingw-w64
+  
+matrix:
+  include:
+    - os: windows
+    - os: linux
+      dist: Focal
+
+jobs:
+  allow_failures:
+    - os: linux
 #    
 #addons:
 #  apt:
@@ -25,8 +26,8 @@ addons:
 
 script:
   - rustup update
-  - rustup target add x86_64-pc-windows-msvc
+  - rustup target add x86_64-pc-windows-gnu
   - cd agent
-  - cargo build --target x86_64-pc-windows-msvc
+  - cargo build --target x86_64-pc-windows-gnu
   - cd ../controlcenter
   - cargo build
