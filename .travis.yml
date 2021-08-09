@@ -20,7 +20,7 @@ addons:
       - cmake
 
 script:
-  - rustup toolchain install x86_64-pc-windows-gnu
+  - rustup toolchain install stable-x86_64-pc-windows-gnu
   - cd agent
   - cargo build --target x86_64-pc-windows-gnu
   - cd ../controlcenter
