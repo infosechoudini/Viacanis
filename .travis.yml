@@ -6,6 +6,7 @@ sudo: true
 cache:
   - apt
   - cargo
+  - cmake
 
 matrix:
   include:
