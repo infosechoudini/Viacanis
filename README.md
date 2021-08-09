@@ -1,3 +1,5 @@
+![RUST](https://github.com/infosechoudini/Viacanis/workflows/build/badge.svg?branch=master) 
+
 # Viacanis
 Blue Team Threat Hunting and Monitoring Tool
 
