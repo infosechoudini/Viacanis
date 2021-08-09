@@ -8,7 +8,7 @@ cache:
 
 os:
   - windows
-  -linux
+  - linux
 
 jobs:
   include:
