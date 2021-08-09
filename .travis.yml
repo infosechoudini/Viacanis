@@ -7,21 +7,17 @@ sudo: true
 matrix:
   include:
     - os: windows
-    - os: linux
-      dist: bionic
-cache:
-  - apt
-  - cargo
-
-jobs:
-  include:
-      - if: os = windows      
         script: 
           - cd agent
           - cargo build
           - cd ../controlcenter
           - cargo build
-      - if: os = linux
+    - os: linux
+      dist: bionic
         script:
           - cd ./controlcenter
           - cargo build
+cache:
+  - apt
+  - cargo
+
