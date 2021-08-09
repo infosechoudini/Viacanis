@@ -3,6 +3,12 @@ language: rust
 rust:
     - nightly
 sudo: true
+
+matrix:
+  include:
+    - os: windows
+    - os: linux
+      dist: bionic
 cache:
   - apt
   - cargo
