@@ -6,10 +6,6 @@ rust:
 cache:
   - cargo
 
-os:
-  - windows
-  - linux
-
 jobs:
   include:
     - stage: windows
