@@ -8,17 +8,19 @@ cache:
   - apt
   - cargo
 
-matrix:
+os:
+  - windows
+  - linux
+
+jobs:
   include:
-    - os: windows
-      - if: os = windows      
-        script: 
-          - cd agent
-          - cargo build
-          - cd ../controlcenter
-          - cargo build
-    - os: linux
-      - if: os = linux
-        script:
-          - cd ./controlcenter
-          - cargo build
+    - if: os = windows      
+      script: 
+        - cd agent
+        - cargo build
+        - cd ../controlcenter
+        - cargo build
+    - if: os = linux
+      script:
+        - cd ./controlcenter
+        - cargo build
