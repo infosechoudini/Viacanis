@@ -12,10 +12,6 @@ cache:
 matrix:
   include:
     - os: osx
-addons:
-  homebrew:
-    packages:
-      - x86_64-w64-mingw32-gcc
 #    
 #addons:
 #  apt:
@@ -25,6 +21,9 @@ addons:
 #      - cmake
 
 script:
+  - rvm use 2.3 --install --binary
+  - brew update
+  - brew install x86_64-w64-mingw32-gcc
   - rustup update
   - rustup target add x86_64-pc-windows-gnu
   - cd agent
