@@ -1,0 +1,53 @@
+name: Viacanis agent build
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+    - development
+
+jobs:
+  job1:
+
+    build:
+
+      strategy:
+        matrix:
+          buildtype: [Debug]
+          buildarch: [x64, x86]
+
+      runs-on: [ubuntu-latest, macos-11]
+    - name: install toolchain
+      shell: bash
+      run: |
+        rustup toolchain install x86_64-pc-windows-gnu
+
+    - name: build agent
+      shell: bash
+      run: |
+        cd agent
+        cargo build --target x86_64-pc-windows-gnu
+
+  job2:
+    build:
+
+      strategy:
+        matrix:
+          buildtype: [Debug]
+          buildarch: [x64, x86]
+
+      runs-on: [ubuntu-latest, macos-11]
+
+          - name: install toolchain
+      shell: bash
+      run: |
+        rustup default nightly
+
+    - name: build agent
+      shell: bash
+      run: |
+        cd controlcenter
+        cargo build 
