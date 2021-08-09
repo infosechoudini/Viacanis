@@ -12,6 +12,12 @@ matrix:
   include:
     - os: linux
       env: TARGET=i686-unknown-linux-gnu
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - cmake
 
 script:
   - rustup toolchain install x86_64-pc-windows-gnu
