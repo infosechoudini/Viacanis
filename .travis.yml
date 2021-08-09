@@ -10,17 +10,18 @@ cache:
 
 matrix:
   include:
-    - os: linux
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - cmake
+    - os: osx
+
+#    
+#addons:
+#  apt:
+#    sources:
+#      - ubuntu-toolchain-r-test
+#    packages:
+#      - cmake
 
 script:
   - rustup update
-  - rustup toolchain install stable-x86_64-pc-windows-gnu
   - rustup target add x86_64-pc-windows-gnu
   - cd agent
   - cargo build --target x86_64-pc-windows-gnu
