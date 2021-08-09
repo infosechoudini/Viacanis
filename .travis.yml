@@ -1,0 +1,20 @@
+---
+language: rust
+rust:
+    - nightly
+sudo: true
+cache:
+  - apt
+  - cargo
+
+matrix:
+  include:
+    - os: linux
+      env: TARGET=i686-unknown-linux-gnu
+
+script:
+  - rustup toolchain install x86_64-pc-windows-gnu
+  - cd agent
+  - cargo build --target x86_64-pc-windows-gnu
+  - cd ../controlcenter
+  - cargo build
