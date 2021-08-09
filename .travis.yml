@@ -12,9 +12,6 @@ cache:
 matrix:
   include:
     - os: osx
-  homebrew:
-    packages:
-      - mingw-w64
 
 #    
 #addons:
@@ -27,6 +24,7 @@ matrix:
 script:
   - rustup update
   - rustup target add x86_64-pc-windows-gnu
+  - brew install mingw-w64
   - cd agent
   - cargo build --target x86_64-pc-windows-gnu
   - cd ../controlcenter
