@@ -1,0 +1,24 @@
+rule:
+  meta:
+    name: Create Thread
+    namespace: host-interaction/thread/create
+    author: infosechoudni
+    scope: basic block
+    mbc:
+      - Process::Create Thread [C0038]
+    examples:
+  features:
+    - or:
+      - and:
+          - match: createthread
+          - api: kernel32.CreateThread
+          - api: ntoskrnl.PsCreateSystemThread
+          - api: shlwapi.SHCreateThread
+          - api: shlwapi.SHCreateThreadWithHandle
+          - api: kernel32.CreateRemoteThread
+          - api: kernel32.CreateRemoteThreadEx
+          - api: ntdll.RtlCreateUserThread
+          - api: ntdll.NtCreateThread
+          - api: ntdll.NtCreateThreadEx
+          - api: ntdll.ZwCreateThread
+          - api: ntdll.ZwCreateThreadEx

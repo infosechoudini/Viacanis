@@ -1,20 +1,32 @@
+#![allow(dead_code, unused_imports, unused_variables, unused_mut, non_snake_case)]
+//LOCAL IMPORTS
 pub mod colors;
 pub mod hunts;
 pub mod eventlog;
 pub mod messages;
 pub mod user;
+pub mod processes;
 pub use user::cli::*;
 pub use user::agent::*;
 
+//DEPENDENCIES
 use clap::{Arg, App};
 use log::*;
 #[macro_use]
 extern crate bitflags;
+use std::alloc;
+use cap::Cap;
+
+const VERSION: Option<&'static str> = option_env!("CARGO_PKG_VERSION");
+
+
+#[global_allocator]
+static ALLOCATOR: Cap<alloc::System> = Cap::new(alloc::System, usize::max_value());
 
 #[tokio::main]
 async fn main() {
     let matches = App::new("viacanisagent")
-                          .version("0.0.2")
+                          .version(VERSION.unwrap())
                           .author("Harry Thomas @infosechoudini")
                           .about("Industrial Hunting Agent")
                           .arg(Arg::with_name("hunt")
@@ -47,6 +59,10 @@ async fn main() {
 
     env_logger::init();
 
+    // Limiting Alloc to the baseline of Antimalware Executable 
+    // Windows Antimalware Exec hovers at 130MB
+    ALLOCATOR.set_limit(50 * 1024 * 1024).unwrap();
+    info!("Currently allocated: {}B", ALLOCATOR.allocated());
 
     if monitor_option != "None"{
         user::agent::monitor_run(server_ip.clone()).await;
@@ -55,7 +71,5 @@ async fn main() {
 
     if hunt_option != "None"{
         info!("STARTING HUNT MODE");
-        user::agent::hunt_run().await; 
-        user::cli::start_cli(); 
     }
 }

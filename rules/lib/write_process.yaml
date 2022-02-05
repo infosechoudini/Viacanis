@@ -1,0 +1,14 @@
+rule:
+  meta:
+    name: Write Process Memory
+    author: infosechoudini
+    att&ck:
+      - Defense Evasion::Process Injection [T1055]
+    examples:
+  features:
+    - or:
+      - and:
+        - match: Write Process Memory
+        - api: kernel32.WriteProcessMemory
+        - api: ntdll.NtWriteVirtualMemory
+        - api: ntdll.ZwWriteVirtualMemory

@@ -1,0 +1,23 @@
+
+rule:
+  meta:
+    name: Ransomware Activity
+    namespace: crypto/crypto
+    author: infosechoudini
+    scope: function
+    att&ck:
+      - 
+    mbc:
+      - 
+    examples:
+      - 
+  features:
+    - or:
+      - and:
+        - match: cryptography
+        - api: advapi32.CryptAcquireContextA
+        - api: kernel32.CreateProcess
+      - and:
+        - match: create or read files
+        - api: kernel32.ReadFile
+        - api: kernel32.WriteFile

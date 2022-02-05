@@ -1,0 +1,16 @@
+rule:
+  meta:
+    name: Check For Debugger VIA API
+    namespace: debugger-detection
+    author: infosechoudini
+    scope: function
+    mbc:
+
+    references:
+    examples:
+  features:
+    - or:
+      - and:
+          - match: isdebugger
+          - api: kernel32.CheckRemoteDebuggerPresent
+          - api: kernel32.IsDebuggerPresent

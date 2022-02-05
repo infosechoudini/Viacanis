@@ -1,0 +1,17 @@
+rule:
+  meta:
+    name: Bypass UAC VIA Token Manipulation
+    namespace: host-interaction/uac/bypass
+    author: infosechoudini
+    scope: function
+    att&ck:
+    references:
+    examples:
+  features:
+    - and:
+      - and:
+        - match: Token Manipulation
+        - api: shell32.ShellExecuteExW
+        - api: advapi32.ImpersonateLoggedOnUser
+        - api: kernel32.GetStartupInfoW
+        - api: advapi32.CreateProcessWithLogonW

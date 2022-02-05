@@ -1,5 +1,5 @@
-pub mod createaccount;
-pub mod deleteaccount;
-pub mod logonscripts;
-pub mod scheduletasks;
-pub mod createmodify_process;
+pub mod T1037;
+pub mod T1053_005;
+pub mod T1136_001;
+pub mod T1531;
+pub mod T1543_003;

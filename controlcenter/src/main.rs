@@ -1,7 +1,9 @@
+#![allow(dead_code, unused_imports, unused_variables)]
 #![feature(proc_macro_hygiene, decl_macro)]
 #[macro_use] extern crate rocket;
 #[macro_use] extern crate rocket_contrib;
 #[macro_use] extern crate prettytable;
+
 
 
 pub mod server;
@@ -15,11 +17,12 @@ pub use cli::*;
 use clap::{Arg, App}; //Might use this later
 use std::thread;
 
+pub const VERSION: Option<&'static str> = option_env!("CARGO_PKG_VERSION");
 
 fn main() {
 
     let matches = App::new("Viacanis")
-                          .version("0.0.2")
+                          .version(VERSION.unwrap())
                           .author("Harry Thomas @infosechoudini")
                           .about("Blue Team Threat Hunting and Monitoring Tool")
                           .arg(Arg::with_name("standalone")

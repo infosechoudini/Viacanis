@@ -1,0 +1,16 @@
+rule:
+  meta:
+    name: Get Logon Sessions
+    namespace: host-interaction/session
+    author: infosechoudini
+    description: Looks for imported Windows APIs being called to enumerate user sessions.
+    scope: function
+    att&ck:
+      - Discovery::Account Discovery [T1087]
+    examples:
+  features:
+    - and:
+      - and:
+        - match: logon sessions
+        - api: secur32.LsaGetLogonSessionData
+        - api: secur32.LsaEnumerateLogonSessions

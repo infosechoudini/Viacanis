@@ -4,7 +4,6 @@ use crate::messages::*;
 use crate::agents::*;
 use crate::cli::logo::print_logo;
 
-
 // OTHER DEPENDENCIES
 use rocket::config::{Config, Environment};
 use rocket_contrib::json::{Json, JsonValue};
@@ -43,7 +42,6 @@ fn agent_update(basemessage: Json<messages::BaseMessage>) -> JsonValue {
 
 pub fn run(interface: String){
     let iface = format!("{}:9999", interface);
-    colors::note_logger(format!("HTTP Interface {}", iface));
 
     let config = Config::build(Environment::Development)
     .address(interface.clone())

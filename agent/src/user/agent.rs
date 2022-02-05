@@ -24,14 +24,16 @@ pub async fn monitor_run(server_ip: String){
 
     let agent = core::new_agent();
     let agent_msg = core::initial_checkin(agent);
-    comms::send_message(agent_msg);
+    comms::send_message(agent_msg).await;
 
 
     let handles = vec![
-        tokio::spawn(async { hunts::logonscripts::monitor_logon_scripts().await;}),
-        tokio::spawn(async { hunts::createaccount::monitor_create_accounts().await;}),
-        tokio::spawn(async { hunts::deleteaccount::monitor_delete_accounts().await;}),
-        tokio::spawn(async { hunts::scheduletasks::monitor_scheduled_tasks().await;}),
+        tokio::spawn(async { hunts::T1037::monitor_logon_scripts().await;}),
+        tokio::spawn(async { hunts::T1136_001::monitor_create_accounts().await;}),
+        tokio::spawn(async { hunts::T1531::monitor_delete_accounts().await;}),
+        tokio::spawn(async { hunts::T1053_005::monitor_scheduled_tasks().await;}),
+        tokio::spawn(async { hunts::T1543_003::monitor_create_system_process().await;}),
+
     ];
 
 
@@ -41,16 +43,5 @@ pub async fn monitor_run(server_ip: String){
     tokio::time::sleep(dur).await;
 }
 
-
-
-pub async fn hunt_run(){
-    info!("** Hunting the System **");
-    tokio::spawn( async {
-        hunts::logonscripts::hunt_logon_scripts().await;   
-        hunts::createaccount::hunt_create_accounts().await;
-        hunts::deleteaccount::hunt_delete_accounts().await;
-        hunts::scheduletasks::hunt_scheduled_tasks().await;
-        }).await;
-}
 
 

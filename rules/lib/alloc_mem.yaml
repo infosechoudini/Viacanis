@@ -1,0 +1,22 @@
+rule:
+  meta:
+    name: allocate memory
+    author: infosechoudini
+    mbc:
+      - Memory::Allocate Memory [C0007]
+    examples:
+  features:
+    - or:
+      - and:
+        - match: Allocate Memory
+        - api: kernel32.VirtualAlloc
+        - api: kernel32.VirtualAllocEx
+        - api: kernel32.VirtualAllocExNuma
+        - api: kernel32.VirtualProtect
+        - api: kernel32.VirtualProtectEx
+        - api: ntoskrnl.NtAllocateVirtualMemory
+        - api: ntoskrnl.ZwAllocateVirtualMemory
+        - api: ntoskrnl.NtMapViewOfSection
+        - api: ntoskrnl.ZwMapViewOfSection
+
+

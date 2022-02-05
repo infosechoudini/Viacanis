@@ -127,11 +127,11 @@ fn try_load_from_dll(function: &str) -> Option<EvtApi> {
 }
 
 lazy_static! {
-    pub static ref EvtClose: Option<EvtApi> = { try_load_from_dll("EvtClose") };
-    pub static ref EvtNext: Option<EvtApi> = { try_load_from_dll("EvtNext") };
-    pub static ref EvtQuery: Option<EvtApi> = { try_load_from_dll("EvtQuery") };
-    pub static ref EvtRender: Option<EvtApi> = { try_load_from_dll("EvtRender") };
-    pub static ref EvtSubscribe: Option<EvtApi> = { try_load_from_dll("EvtSubscribe") };
+    pub static ref EvtClose: Option<EvtApi> = try_load_from_dll("EvtClose");
+    pub static ref EvtNext: Option<EvtApi> =  try_load_from_dll("EvtNext");
+    pub static ref EvtQuery: Option<EvtApi> =  try_load_from_dll("EvtQuery");
+    pub static ref EvtRender: Option<EvtApi> =  try_load_from_dll("EvtRender");
+    pub static ref EvtSubscribe: Option<EvtApi> =  try_load_from_dll("EvtSubscribe");
 }
 
 pub struct EvtHandleWrapper(pub EvtHandle);
