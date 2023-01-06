@@ -14,7 +14,7 @@ ntapi = "0.3.4"
 kernel32-sys = "0.2.2"
 log4rs = "0.13.0"
 log = "0.4.11"
-tokio = { version = "1.9.0", features = ["full"] }
+tokio = { version = "1.16.1", features = ["full"] }
 env_logger = "0.8"
 win32-error = "0.9.0"
 djin = "0.1.1"
